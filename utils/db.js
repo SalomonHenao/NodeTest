@@ -29,7 +29,7 @@ function getBooks(filter = {}) {
             if (filter.price && book.price && book.price < filter.price) {
                 return false;
             }
-            if (filter.quantity && book.quantity && book.quantity < filter.quantity) {
+            if (book.quantity != undefined && filter.quantity != undefined && book.quantity < filter.quantity) {
                 return false;
             }
             return true; // Include the book if no filter-out criteria matched
