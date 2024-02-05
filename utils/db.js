@@ -1,5 +1,6 @@
-import { Book } from '../models/data.js' // Import the Book class
+import { Book } from '../resources/data.js' // Import the Book class
 import { createRequire } from 'module';
+import { BASE_STRINGS } from "../resources/text.js";
 const require = createRequire(import.meta.url);
 var cache = require('memory-cache'); // Initialize local cache for data storage
 
@@ -39,7 +40,7 @@ function getBooks(filter = {}) {
 function addBook(book) {
     // Ensure the book being added is an instance of Book
     if (!(book instanceof Book)) {
-        throw new Error('The provided object is not an instance of Book');
+        throw new Error(BASE_STRINGS.notBook);
     }
     const books = JSON.parse(cache.get('books'));
     books.push(book);
@@ -60,7 +61,7 @@ function updateBook(updatedBookData, bookId) {
 
         cache.put('books', JSON.stringify(books));
     } else {
-        throw new Error('Book not found');
+        throw new Error(BASE_STRINGS.notFound);
     }
 }
 
@@ -73,7 +74,7 @@ function deleteBook(bookId) {
         books.splice(bookIndex, 1);
         cache.put('books', JSON.stringify(books));
     } else {
-        throw new Error('Book not found');
+        throw new Error(BASE_STRINGS.notFound);
     }
 }
 

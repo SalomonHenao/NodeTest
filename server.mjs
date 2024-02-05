@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { get, post, put, del } from "./utils/api.js"; // Import CRUD functions from API
+import { BASE_STRINGS } from "./resources/text.js";
 
 const app = express();
 const port = 8000;
@@ -9,7 +10,7 @@ const port = 8000;
 app.use(bodyParser.json());
 
 // Route to get all books
-app.get('/', (req, res) => {
+app.get('/api/books', (req, res) => {
     // This will include any query params as filters (e.g., title, author)
     const result = get(req.query);
     res.json(result);
@@ -17,14 +18,14 @@ app.get('/', (req, res) => {
 
 
 // Route to add a new book
-app.post('/', (req, res) => {
+app.post('/api/books', (req, res) => {
     const data = req.body;
     const result = post(data);
     res.json(result);
 });
 
 // Route to update an book
-app.put('/:index', (req, res) => {
+app.put('/api/books/:index', (req, res) => {
     const { index } = req.params;
     const data = req.body;
     const result = put(Number(index), data);
@@ -32,12 +33,12 @@ app.put('/:index', (req, res) => {
 });
 
 // Route to delete an book
-app.delete('/:index', (req, res) => {
+app.delete('/api/books/:index', (req, res) => {
     const { index } = req.params;
     const result = del(Number(index));
     res.json(result);
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`${BASE_STRINGS.running} ${port}`);
 });

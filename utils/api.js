@@ -1,5 +1,6 @@
 import { getBooks, addBook, updateBook, deleteBook } from "./db.js"; // Import CRUD functions from DB
-import { Book } from '../models/data.js' // Import the Book class
+import { Book } from '../resources/data.js' // Import the Book class
+import { BASE_STRINGS } from "../resources/text.js";
 
 // Get all books
 function get(query) {
@@ -28,12 +29,12 @@ function generateUniqueId() {
 function post(data) {
     try {
         if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
-            return 'The provided object is not an instance of Book';
+            return BASE_STRINGS.notBook;
         }
         // Create a new Book instance from the request data
         const newBook = new Book(generateUniqueId(), data.title, data.description, data.author, data.price, data.quantity);
         addBook(newBook); // Pass the Book instance to addBook
-        return { success: true, message: "Book added successfully" };
+        return { success: true, message: BASE_STRINGS.postBook };
     } catch (error) {
         return { success: false, message: error.message };
     }
@@ -43,7 +44,7 @@ function post(data) {
 function put(bookId, data) {
     try {
         if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
-            return 'The provided object is not an instance of Book';
+            return BASE_STRINGS.notBook;
         }
         // Since we're updating, we don't create a new instance but prepare the data for update
         const updatedBookData = {
@@ -56,7 +57,7 @@ function put(bookId, data) {
         };
 
         updateBook(updatedBookData, bookId); // Pass the updated data and ID to updateBook
-        return { success: true, message: "Book updated successfully" };
+        return { success: true, message: BASE_STRINGS.putBook };
     } catch (error) {
         return { success: false, message: error.message };
     }
@@ -66,7 +67,7 @@ function put(bookId, data) {
 function del(index) {
     try {
         deleteBook(index);
-        return { success: true, message: "Book deleted successfully" };
+        return { success: true, message: BASE_STRINGS.delBook };
     } catch (error) {
         return { success: false, message: error.message };
     }
