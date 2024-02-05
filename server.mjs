@@ -8,7 +8,7 @@ const port = 8000;
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Route to get all items
+// Route to get all books
 app.get('/', (req, res) => {
     // This will include any query params as filters (e.g., title, author)
     const result = get(req.query);
@@ -16,14 +16,14 @@ app.get('/', (req, res) => {
 });
 
 
-// Route to add a new item
+// Route to add a new book
 app.post('/', (req, res) => {
     const data = req.body;
     const result = post(data);
     res.json(result);
 });
 
-// Route to update an item
+// Route to update an book
 app.put('/:index', (req, res) => {
     const { index } = req.params;
     const data = req.body;
@@ -31,7 +31,7 @@ app.put('/:index', (req, res) => {
     res.json(result);
 });
 
-// Route to delete an item
+// Route to delete an book
 app.delete('/:index', (req, res) => {
     const { index } = req.params;
     const result = del(Number(index));

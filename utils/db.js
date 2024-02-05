@@ -1,73 +1,91 @@
+import { Book } from '../models/data.js' // Import the Book class
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 var cache = require('memory-cache'); // Initialize local cache for data storage
 
 // Create the base tables into cache
 function build() {
-    cache.put('items', `[]`);
-};
+    cache.put('books', JSON.stringify([]));
+}
 
-// Get items from the cache with optional filters
-function getItems(filter = {}) {
-    let items = JSON.parse(cache.get('items'));
+// Get books from the cache with optional filters
+function getBooks(filter = {}) {
+    let books = JSON.parse(cache.get('books')).map(bookData => new Book(bookData.title, bookData.description, bookData.author, bookData.price, bookData.quantity));
 
-    // Filter items based on the criteria provided in the filter object
+    // Filter books based on the criteria provided in the filter object
     if (filter) {
-        items = items.filter(item => {
-            // Check title, if filter title is provided and doesn't match, exclude the item
-            if (filter.title && item.title && !item.title.toLowerCase().includes(filter.title.toLowerCase())) {
+        // Check filters, if filter is provided and doesn't match, exclude the book
+        books = books.filter(book => {
+            if (filter.title && book.title && !book.title.toLowerCase().includes(filter.title.toLowerCase())) {
                 return false;
             }
-            // Check author, if filter author is provided and doesn't match, exclude the item
-            if (filter.author && item.author && !item.author.toLowerCase().includes(filter.author.toLowerCase())) {
+            if (filter.author && book.author && !book.author.toLowerCase().includes(filter.author.toLowerCase())) {
                 return false;
             }
-            // Check price, if filter price is provided and doesn't match, exclude the item
-            if (filter.price && item.price && item.price !== filter.price) {
+            if (filter.price && book.price && book.price !== filter.price) {
                 return false;
             }
-            // Check stock quantity, if filter stockQuantity is provided and doesn't match, exclude the item
-            if (filter.stockQuantity && item.stockQuantity && item.stockQuantity < filter.stockQuantity) {
+            if (filter.stockQuantity && book.quantity && book.quantity < filter.stockQuantity) {
                 return false;
             }
-            return true; // Include the item if all relevant filters match
+            return true; // Include the book if no filter-out criteria matched
         });
     }
 
-    return { data: items };
+    return { data: books };
 }
 
-// Add a new item to the cache
-function addItem(item) {
-    const items = JSON.parse(cache.get('items'));
-    items.push(item);
-    cache.put('items', JSON.stringify(items));
+// Random ID generation
+function generateUniqueId() {
+    return Date.now().toString();
 }
 
-// Update an existing item in the cache
-function updateItem(updatedItem, index) {
-    const items = JSON.parse(cache.get('items'));
-    if (index >= 0 && index < items.length) {
-        items[index] = updatedItem;
-        cache.put('items', JSON.stringify(items));
+// Add a new book to the cache
+function addBook(book) {
+    // Ensure the book being added is an instance of Book
+    if (!(book instanceof Book)) {
+        throw new Error('The provided object is not an instance of Book');
+    }
+    const books = JSON.parse(cache.get('books'));
+    book.id = generateUniqueId();
+    books.push(book);
+    cache.put('books', JSON.stringify(books));
+}
+
+// Update an existing book in the cache
+function updateBook(updatedBookData, bookId) {
+    const books = JSON.parse(cache.get('books'));
+    const bookIndex = books.findIndex(book => book.id === bookId);
+    if (bookIndex !== -1) {
+        // Found the book, now update it
+        books[bookIndex].title = updatedBookData.title;
+        books[bookIndex].description = updatedBookData.description;
+        books[bookIndex].author = updatedBookData.author;
+        books[bookIndex].price = updatedBookData.price;
+        books[bookIndex].quantity = updatedBookData.quantity;
+
+        cache.put('books', JSON.stringify(books));
     } else {
-        throw new Error('Item not found');
+        throw new Error('Book not found');
     }
 }
 
-// Delete an item from the cache
-function deleteItem(index) {
-    const items = JSON.parse(cache.get('items'));
-    if (index >= 0 && index < items.length) {
-        items.splice(index, 1);
-        cache.put('items', JSON.stringify(items));
+// Delete a book from the cache
+function deleteBook(bookId) {
+    const books = JSON.parse(cache.get('books'));
+    const bookIndex = books.findIndex(book => book.id === bookId);
+    if (bookIndex !== -1) {
+        // Found the book, now delete it
+        books.splice(bookIndex, 1);
+        cache.put('books', JSON.stringify(books));
     } else {
-        throw new Error('Item not found');
+        throw new Error('Book not found');
     }
 }
+
 
 // Initial setup
 build();
 
 // Export the CRUD functions
-export { getItems, addItem, updateItem, deleteItem };
+export { getBooks, addBook, updateBook, deleteBook };

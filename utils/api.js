@@ -1,6 +1,7 @@
-import { getItems, addItem, updateItem, deleteItem } from "./db.js"; // Import CRUD functions from DB
+import { getBooks, addBook, updateBook, deleteBook } from "./db.js"; // Import CRUD functions from DB
+import { Book } from '../models/data.js' // Import the Book class
 
-// Get all items
+// Get all books
 function get(query) {
     // Extract filter parameters from the query object
     const filter = {
@@ -13,37 +14,48 @@ function get(query) {
     // Remove undefined filters to avoid filtering by them
     Object.keys(filter).forEach(key => filter[key] === undefined && delete filter[key]);
 
-    // Call getItems with the constructed filter
-    const result = getItems(filter);
+    // Call getBooks with the constructed filter
+    const result = getBooks(filter);
     return result;
 }
 
-
-// Add a new item
+// Add a new book
 function post(data) {
     try {
-        addItem(data);
-        return { success: true, message: "Item added successfully" };
+        // Create a new Book instance from the request data
+        const newBook = new Book(data.title, data.description, data.author, data.price, data.quantity);
+        addBook(newBook); // Pass the Book instance to addBook
+        return { success: true, message: "Book added successfully" };
     } catch (error) {
         return { success: false, message: error.message };
     }
 }
 
-// Update an existing item
-function put(index, data) {
+// Update an existing book
+function put(bookId, data) {
     try {
-        updateItem(data, index);
-        return { success: true, message: "Item updated successfully" };
+        // Since we're updating, we don't create a new instance but prepare the data for update
+        const updatedBookData = {
+            id: bookId, // Ensure this ID is passed to identify the book to update
+            title: data.title,
+            description: data.description,
+            author: data.author,
+            price: data.price,
+            quantity: data.quantity
+        };
+
+        updateBook(updatedBookData, bookId); // Pass the updated data and ID to updateBook
+        return { success: true, message: "Book updated successfully" };
     } catch (error) {
         return { success: false, message: error.message };
     }
 }
 
-// Delete an item
+// Delete an book
 function del(index) {
     try {
-        deleteItem(index);
-        return { success: true, message: "Item deleted successfully" };
+        deleteBook(index);
+        return { success: true, message: "Book deleted successfully" };
     } catch (error) {
         return { success: false, message: error.message };
     }
