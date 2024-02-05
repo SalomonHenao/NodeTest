@@ -21,6 +21,11 @@ function get(query) {
     return result;
 }
 
+// Check if book data is valid
+function validBookData(data) {
+    return data.title && data.description && data.author && data.price && (data.quantity >= 0);
+}
+
 // Random ID generation
 function generateUniqueId() {
     return Date.now().toString();
@@ -29,7 +34,7 @@ function generateUniqueId() {
 // Add a new book
 function post(data) {
     try {
-        if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
+        if (!validBookData(data)) {
             return BASE_STRINGS.notBook;
         }
         // Create a new Book instance from the request data
@@ -44,7 +49,7 @@ function post(data) {
 // Update an existing book
 function put(bookId, data) {
     try {
-        if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
+        if (!validBookData(data)) {
             return BASE_STRINGS.notBook;
         }
         // Since we're updating, we don't create a new instance but prepare data for update
