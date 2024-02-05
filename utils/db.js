@@ -20,10 +20,13 @@ function getBooks(filter = {}) {
             if (filter.title && book.title && !book.title.toLowerCase().includes(filter.title.toLowerCase())) {
                 return false;
             }
+            if (filter.description && book.description && !book.description.toLowerCase().includes(filter.description.toLowerCase())) {
+                return false;
+            }
             if (filter.author && book.author && !book.author.toLowerCase().includes(filter.author.toLowerCase())) {
                 return false;
             }
-            if (filter.price && book.price && book.price !== filter.price) {
+            if (filter.price && book.price && book.price < filter.price) {
                 return false;
             }
             if (filter.quantity && book.quantity && book.quantity < filter.quantity) {

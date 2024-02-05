@@ -7,6 +7,7 @@ function get(query) {
     // Extract filter parameters
     const filter = {
         title: query.title,
+        description: query.description,
         author: query.author,
         price: query.price ? parseFloat(query.price) : undefined,
         quantity: query.quantity ? parseInt(query.quantity, 10) : undefined
@@ -32,7 +33,7 @@ function post(data) {
             return BASE_STRINGS.notBook;
         }
         // Create a new Book instance from the request data
-        const newBook = new Book(generateUniqueId(), data.title, data.description, data.author, data.price, data.quantity);
+        const newBook = new Book(generateUniqueId(), data.title, data.description, data.author, parseFloat(data.price), parseInt(data.quantity));
         addBook(newBook); // Pass the Book instance to addBook
         return { success: true, message: BASE_STRINGS.postBook };
     } catch (error) {
