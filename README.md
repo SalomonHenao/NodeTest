@@ -1,4 +1,4 @@
-# Express Book Management API
+# Books Inventory Management - Backend
 
 This project is a simple Express.js API for managing books. It supports basic CRUD (Create, Read, Update, Delete) operations on a book resource.
 
