@@ -10,7 +10,7 @@ function build() {
 
 // Get books from the cache with optional filters
 function getBooks(filter = {}) {
-    let books = JSON.parse(cache.get('books')).map(bookData => new Book(bookData.title, bookData.description, bookData.author, bookData.price, bookData.quantity));
+    let books = JSON.parse(cache.get('books')).map(bookData => new Book(bookData.id, bookData.title, bookData.description, bookData.author, bookData.price, bookData.quantity));
 
     // Filter books based on the criteria provided in the filter object
     if (filter) {
@@ -25,7 +25,7 @@ function getBooks(filter = {}) {
             if (filter.price && book.price && book.price !== filter.price) {
                 return false;
             }
-            if (filter.stockQuantity && book.quantity && book.quantity < filter.stockQuantity) {
+            if (filter.quantity && book.quantity && book.quantity < filter.quantity) {
                 return false;
             }
             return true; // Include the book if no filter-out criteria matched
@@ -35,11 +35,6 @@ function getBooks(filter = {}) {
     return { data: books };
 }
 
-// Random ID generation
-function generateUniqueId() {
-    return Date.now().toString();
-}
-
 // Add a new book to the cache
 function addBook(book) {
     // Ensure the book being added is an instance of Book
@@ -47,7 +42,6 @@ function addBook(book) {
         throw new Error('The provided object is not an instance of Book');
     }
     const books = JSON.parse(cache.get('books'));
-    book.id = generateUniqueId();
     books.push(book);
     cache.put('books', JSON.stringify(books));
 }
@@ -55,7 +49,7 @@ function addBook(book) {
 // Update an existing book in the cache
 function updateBook(updatedBookData, bookId) {
     const books = JSON.parse(cache.get('books'));
-    const bookIndex = books.findIndex(book => book.id === bookId);
+    const bookIndex = books.findIndex(book => book.id.toString() === bookId.toString());
     if (bookIndex !== -1) {
         // Found the book, now update it
         books[bookIndex].title = updatedBookData.title;
@@ -73,7 +67,7 @@ function updateBook(updatedBookData, bookId) {
 // Delete a book from the cache
 function deleteBook(bookId) {
     const books = JSON.parse(cache.get('books'));
-    const bookIndex = books.findIndex(book => book.id === bookId);
+    const bookIndex = books.findIndex(book => book.id.toString() === bookId.toString());
     if (bookIndex !== -1) {
         // Found the book, now delete it
         books.splice(bookIndex, 1);

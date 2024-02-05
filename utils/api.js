@@ -8,7 +8,7 @@ function get(query) {
         title: query.title,
         author: query.author,
         price: query.price ? parseFloat(query.price) : undefined,
-        stockQuantity: query.stockQuantity ? parseInt(query.stockQuantity, 10) : undefined
+        quantity: query.quantity ? parseInt(query.quantity, 10) : undefined
     };
 
     // Remove undefined filters to avoid filtering by them
@@ -19,11 +19,19 @@ function get(query) {
     return result;
 }
 
+// Random ID generation
+function generateUniqueId() {
+    return Date.now().toString();
+}
+
 // Add a new book
 function post(data) {
     try {
+        if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
+            return 'The provided object is not an instance of Book';
+        }
         // Create a new Book instance from the request data
-        const newBook = new Book(data.title, data.description, data.author, data.price, data.quantity);
+        const newBook = new Book(generateUniqueId(), data.title, data.description, data.author, data.price, data.quantity);
         addBook(newBook); // Pass the Book instance to addBook
         return { success: true, message: "Book added successfully" };
     } catch (error) {
@@ -34,6 +42,9 @@ function post(data) {
 // Update an existing book
 function put(bookId, data) {
     try {
+        if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
+            return 'The provided object is not an instance of Book';
+        }
         // Since we're updating, we don't create a new instance but prepare the data for update
         const updatedBookData = {
             id: bookId, // Ensure this ID is passed to identify the book to update
