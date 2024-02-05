@@ -26,7 +26,7 @@ function getBooks(filter = {}) {
             if (filter.author && book.author && !book.author.toLowerCase().includes(filter.author.toLowerCase())) {
                 return false;
             }
-            if (filter.price && book.price && book.price < filter.price) {
+            if (filter.price && book.price && book.price > filter.price) {
                 return false;
             }
             if (book.quantity != undefined && filter.quantity != undefined && book.quantity < filter.quantity) {
