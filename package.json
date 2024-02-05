@@ -1,0 +1,24 @@
+{
+  "name": "nodetest",
+  "version": "1.0.0",
+  "description": "nodetest",
+  "main": "server.mjs",
+  "scripts": {
+    "dev": "node server.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SalomonHenao/NodeTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SalomonHenao/NodeTest/issues"
+  },
+  "homepage": "https://github.com/SalomonHenao/NodeTest#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "memory-cache": "^0.2.0"
+  }
+}
