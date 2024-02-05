@@ -3,8 +3,16 @@ import bodyParser from "body-parser"; // Import middleware
 import { get, post, put, del } from "./utils/api.js"; // Import CRUD functions from API
 import { BASE_STRINGS } from "./resources/text.js"; // Import user strings base
 
+// Implement CORS to enable localhost traffic
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+var cors = require('cors')
+
 const app = express();
 const port = 8000;
+
+// Middleware to manage cors
+app.use(cors())
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
