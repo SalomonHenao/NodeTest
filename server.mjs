@@ -1,7 +1,7 @@
-import express from "express";
-import bodyParser from "body-parser";
+import express from "express"; // Import express to run server
+import bodyParser from "body-parser"; // Import middleware
 import { get, post, put, del } from "./utils/api.js"; // Import CRUD functions from API
-import { BASE_STRINGS } from "./resources/text.js";
+import { BASE_STRINGS } from "./resources/text.js"; // Import user strings base
 
 const app = express();
 const port = 8000;
@@ -11,11 +11,10 @@ app.use(bodyParser.json());
 
 // Route to get all books
 app.get('/api/books', (req, res) => {
-    // This will include any query params as filters (e.g., title, author)
+    // Include any query params as filters (title, author, etc.)
     const result = get(req.query);
     res.json(result);
 });
-
 
 // Route to add a new book
 app.post('/api/books', (req, res) => {
@@ -39,6 +38,7 @@ app.delete('/api/books/:index', (req, res) => {
     res.json(result);
 });
 
+// Start listening
 app.listen(port, () => {
     console.log(`${BASE_STRINGS.running} ${port}`);
 });

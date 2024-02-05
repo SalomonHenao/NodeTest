@@ -1,10 +1,10 @@
 import { getBooks, addBook, updateBook, deleteBook } from "./db.js"; // Import CRUD functions from DB
-import { Book } from '../resources/data.js' // Import the Book class
-import { BASE_STRINGS } from "../resources/text.js";
+import { Book } from '../resources/data.js' // Import Book object class
+import { BASE_STRINGS } from "../resources/text.js"; // Import user strings base
 
 // Get all books
 function get(query) {
-    // Extract filter parameters from the query object
+    // Extract filter parameters
     const filter = {
         title: query.title,
         author: query.author,
@@ -12,10 +12,10 @@ function get(query) {
         quantity: query.quantity ? parseInt(query.quantity, 10) : undefined
     };
 
-    // Remove undefined filters to avoid filtering by them
+    // Remove undefined filters
     Object.keys(filter).forEach(key => filter[key] === undefined && delete filter[key]);
 
-    // Call getBooks with the constructed filter
+    // Call getBooks with constructed filter
     const result = getBooks(filter);
     return result;
 }
@@ -46,9 +46,8 @@ function put(bookId, data) {
         if (!data.title || !data.description || !data.author || !data.price || !data.quantity) {
             return BASE_STRINGS.notBook;
         }
-        // Since we're updating, we don't create a new instance but prepare the data for update
+        // Since we're updating, we don't create a new instance but prepare data for update
         const updatedBookData = {
-            id: bookId, // Ensure this ID is passed to identify the book to update
             title: data.title,
             description: data.description,
             author: data.author,
@@ -66,6 +65,7 @@ function put(bookId, data) {
 // Delete an book
 function del(index) {
     try {
+        // Pass the ID to deleteBook
         deleteBook(index);
         return { success: true, message: BASE_STRINGS.delBook };
     } catch (error) {
@@ -73,5 +73,5 @@ function del(index) {
     }
 }
 
-// Export the API functions
+// Export API CRUD functions
 export { get, post, put, del };

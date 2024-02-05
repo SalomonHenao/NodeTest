@@ -1,22 +1,22 @@
 import { Book } from '../resources/data.js' // Import the Book class
+import { BASE_STRINGS } from "../resources/text.js"; // Import user strings base
 import { createRequire } from 'module';
-import { BASE_STRINGS } from "../resources/text.js";
 const require = createRequire(import.meta.url);
 var cache = require('memory-cache'); // Initialize local cache for data storage
 
-// Create the base tables into cache
+// Create base table in cache
 function build() {
     cache.put('books', JSON.stringify([]));
 }
 
-// Get books from the cache with optional filters
+// Get books from cache with optional filters
 function getBooks(filter = {}) {
     let books = JSON.parse(cache.get('books')).map(bookData => new Book(bookData.id, bookData.title, bookData.description, bookData.author, bookData.price, bookData.quantity));
 
     // Filter books based on the criteria provided in the filter object
     if (filter) {
-        // Check filters, if filter is provided and doesn't match, exclude the book
         books = books.filter(book => {
+            // Check filters, if filter is provided and doesn't match, exclude the book
             if (filter.title && book.title && !book.title.toLowerCase().includes(filter.title.toLowerCase())) {
                 return false;
             }
@@ -61,6 +61,7 @@ function updateBook(updatedBookData, bookId) {
 
         cache.put('books', JSON.stringify(books));
     } else {
+        // Book not found
         throw new Error(BASE_STRINGS.notFound);
     }
 }
@@ -74,13 +75,13 @@ function deleteBook(bookId) {
         books.splice(bookIndex, 1);
         cache.put('books', JSON.stringify(books));
     } else {
+        // Book not found
         throw new Error(BASE_STRINGS.notFound);
     }
 }
 
-
 // Initial setup
 build();
 
-// Export the CRUD functions
+// Export database CRUD functions
 export { getBooks, addBook, updateBook, deleteBook };
