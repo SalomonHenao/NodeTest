@@ -2,6 +2,8 @@
 
 This project is a simple Express.js API for managing books. It supports basic CRUD (Create, Read, Update, Delete) operations on a book resource.
 
+![image](https://github.com/SalomonHenao/ReactTest/assets/39999385/da4f5dba-326b-4349-8df8-4b7e40ca49b2)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
